@@ -33,6 +33,7 @@ namespace MoneyMaker
                 OIB = OIb;
                 godina_faksa = godina;
 
+
             }
 
             
@@ -42,7 +43,8 @@ namespace MoneyMaker
                 Console.WriteLine("Dug je 34.00 EUR");
             }
 
-        }
+
+        } 
 
         public class Student_Popravni : Student
         {
@@ -78,12 +80,18 @@ namespace MoneyMaker
                 string godina = Console.ReadLine();
                 if (int.TryParse(godina, out int god))
                 {
+                    if(god<6 && god > 0)
+                    {
+                        Student noviStudent = new Student(ime, adresa, OIB, god);
 
-                    Student noviStudent = new Student(ime, adresa, OIB, god);
+                        Console.WriteLine("Kreiran je novi student!");
+                        noviStudent.Dug_referadi_za_upis();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Pogrešan unos godine! Molimo unesite broj.");
+                    }
 
-                    Console.WriteLine("Kreiran je novi student!");
-                    noviStudent.Dug_referadi_za_upis();
-                   
 
                 }
                 else
@@ -103,11 +111,19 @@ namespace MoneyMaker
                 string godina = Console.ReadLine();
                 if (int.TryParse(godina, out int god))
                 {
+                    if (god < 6 && god > 0)
+                    {
+                        Student_Popravni noviStudent = new Student_Popravni(ime, adresa, OIB, god);
 
-                    Student_Popravni noviStudent = new Student_Popravni(ime, adresa, OIB, god);
+                        Console.WriteLine("Kreiran je novi student!");
+                        noviStudent.Dug_referadi_za_upis();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Pogrešan unos godine! Molimo unesite broj.");
+                    }
 
-                    Console.WriteLine("Kreiran je novi student!");
-                    noviStudent.Dug_referadi_za_upis();
+                    
                 }
                 else
                 {
