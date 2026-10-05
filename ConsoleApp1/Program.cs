@@ -36,7 +36,8 @@ namespace MoneyMaker
             public string OIb { get; set; }
 
             public virtual void Izreci() {
-             
+
+                Console.WriteLine("Dobrodošli!");
                 Console.WriteLine("OIB: " + OIB);
             }
 
