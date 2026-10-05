@@ -1,58 +1,75 @@
 ﻿using System;
-using System.Collections;
+using System.Linq
+using System.Collections.Generic;
 
 namespace MoneyMaker
 {
     public class Proj
     {
 
-        public interface Opcenito
+        public interface IVozilo
         {
-           
-            public string Name { get; set; }
+            public string Registracija { get; set; }
+            public string Vlasnik { get; set; }
+            public void Istek_Reg();
+            void PrikaziKm();
+        }
+        
 
-            public string Address { get; set; }
-            public string OIB { get; set; }
-            public int godina_faksa { get; set; }
+        public class Automobil : IVozilo{
 
-            public void Dug_referadi_za_upis();
+            private int predeni_kilometri;
+            protected DateTime Pocetak_registracije;
+            public string Registracija { get; set; }
+            public string Vlasnik { get; set; }
+
+            public Automobil(DateTime pocetak, string registracija, string vlasnik, int km)
+            {
+                Pocetak_registracije = pocetak;
+                Registracija = registracija;
+                Vlasnik = vlasnik;
+                predeni_kilometri = km;
+            }
+            public virtual void Istek_Reg()
+            {
+                int godina = Pocetak_registracije.Year+4;
+                int mjesec = Pocetak_registracije.Month;
+                int dan = Pocetak_registracije.Day;
+
+                Console.WriteLine("Registracija za vozilo " + Registracija + " istjece " + dan + "." + mjesec + "." + godina);
+            }
+
+            public void DodajKilometre(int km)
+            {
+                if (km > 0)
+                {
+                    predeni_kilometri += km;
+                }
+                else
+                {
+                    Console.WriteLine("Unos nije valjan!");
+                }
+            }
+
+            public void PrikaziKm()
+            {
+                Console.WriteLine("Vozilo "+ Registracija +" je prešlo: "+predeni_kilometri + " km");
+            }
+
         }
 
-        public class Student : Opcenito
+        public class Skuter : Automobil
         {
-            public string Name { get; set; }
-            public string Address { get; set; }
-            public string OIB { get; set; }
-
-            public int godina_faksa { get; set; }
-
-            public Student(string name, string address, string OIb, int godina)
+            public Skuter(DateTime pocetak, string registracija, string vlasnik, int km) : base(pocetak, registracija, vlasnik,km) { }
+            public override void Istek_Reg()
             {
-                Name = name;
-                Address = address;
-                OIB = OIb;
-                godina_faksa = godina;
+                int godina = Pocetak_registracije.Year +10;
+                int mjesec = Pocetak_registracije.Month;
+                int dan = Pocetak_registracije.Day;
 
-
+                Console.WriteLine("Registracija za vozilo " + Registracija+ " istjece " + dan + "." + mjesec + "." + godina);
             }
 
-            
-
-            public virtual void Dug_referadi_za_upis() {
-
-                Console.WriteLine("Dug je 34.00 EUR");
-            }
-
-
-        } 
-
-        public class Student_Popravni : Student
-        {
-            public Student_Popravni(string inname, string ina, string inoib, int godina) : base(inname, ina, inoib, godina) { }
-            public override void Dug_referadi_za_upis()
-            {
-                Console.WriteLine("Dug je 62.50 EUR");
-            }
         }
 
 
@@ -61,75 +78,94 @@ namespace MoneyMaker
 
         static void Main(string[] args)
         {
-
-            Console.WriteLine("Odaberite jedno od ponuđenih polja: ");
-            Console.WriteLine("1. Kreiraj Studenta");
-            Console.WriteLine("2. Kreiraj ponavljajućeg studenta");
-
-
-            string input = Console.ReadLine();
-            if (input == "1")
+            List<IVozilo> vozila = new List<IVozilo>();
+            while (true)
             {
-                Console.WriteLine("Unesite ime studenta: ");
-                string ime = Console.ReadLine();
-                Console.WriteLine("Unesite adresu studenta: ");
-                string adresa = Console.ReadLine();
-                Console.WriteLine("Unesite OIB studenta: ");
-                string OIB = Console.ReadLine();
-                Console.WriteLine("Unesite godinu faksa studenta: ");
-                string godina = Console.ReadLine();
-                if (int.TryParse(godina, out int god))
-                {
-                    if(god<6 && god > 0)
-                    {
-                        Student noviStudent = new Student(ime, adresa, OIB, god);
 
-                        Console.WriteLine("Kreiran je novi student!");
-                        noviStudent.Dug_referadi_za_upis();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Pogrešan unos godine! Molimo unesite broj.");
-                    }
+                Console.WriteLine("1. Unesi Automobil u sustav");
+                Console.WriteLine("2. Unesi Skuter u sustav");
+                Console.WriteLine("3. Pronadi vozilo");
+                string broj = Console.ReadLine();
+                if (broj == "1")
+                {
+                    Console.WriteLine("Unesi godinu registracije");
+                    string godina1 = Console.ReadLine();
+                    int godina = int.Parse(godina1);
+                    Console.WriteLine("Unesi mjesec registracije");
+                    string mjesec1 = Console.ReadLine();
+                    int mjesec = int.Parse(mjesec1);
+                    Console.WriteLine("Unesi dan registracije");
+                    string dan1 = Console.ReadLine();
+                    int dan = int.Parse(dan1);
+
+                    DateTime datumreg = new DateTime(godina, mjesec, dan);
+
+                    Console.WriteLine("Unesi registraciju: ");
+                    string reg = Console.ReadLine();
+
+                    Console.WriteLine("Unesi ime vlasnika: ");
+                    string vlasnik = Console.ReadLine();
+
+                    Console.WriteLine("Unesi predjene km: ");
+                    int km = int.Parse(Console.ReadLine());
+
+                    Automobil auto = new Automobil(datumreg, reg, vlasnik, km);
+                    Console.WriteLine("Vozilo je uneseno u sustav.");
+                    vozila.Add(auto);
 
 
                 }
-                else
+                else if (broj == "2")
                 {
-                    Console.WriteLine("Pogrešan unos godine! Molimo unesite broj.");
-                }
-            }
-            else if (input == "2")
-            {
-                Console.WriteLine("Unesite ime studenta: ");
-                string ime = Console.ReadLine();
-                Console.WriteLine("Unesite adresu studenta: ");
-                string adresa = Console.ReadLine();
-                Console.WriteLine("Unesite OIB studenta: ");
-                string OIB = Console.ReadLine();
-                Console.WriteLine("Unesite godinu faksa studenta: ");
-                string godina = Console.ReadLine();
-                if (int.TryParse(godina, out int god))
-                {
-                    if (god < 6 && god > 0)
-                    {
-                        Student_Popravni noviStudent = new Student_Popravni(ime, adresa, OIB, god);
+                    Console.WriteLine("Unesi godinu registracije");
+                    string godina1 = Console.ReadLine();
+                    int godina = int.Parse(godina1);
+                    Console.WriteLine("Unesi mjesec registracije");
+                    string mjesec1 = Console.ReadLine();
+                    int mjesec = int.Parse(mjesec1);
+                    Console.WriteLine("Unesi dan registracije");
+                    string dan1 = Console.ReadLine();
+                    int dan = int.Parse(dan1);
 
-                        Console.WriteLine("Kreiran je novi student!");
-                        noviStudent.Dug_referadi_za_upis();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Pogrešan unos godine! Molimo unesite broj.");
-                    }
+                    DateTime datumreg = new DateTime(godina, mjesec, dan);
 
+                    Console.WriteLine("Unesi registraciju: ");
+                    string reg = Console.ReadLine();
+
+                    Console.WriteLine("Unesi ime vlasnika: ");
+                    string vlasnik = Console.ReadLine();
+
+                    Console.WriteLine("Unesi predjene km: ");
+                    int km = int.Parse(Console.ReadLine());
+
+                    Skuter skuter = new Skuter(datumreg, reg, vlasnik, km);
+                    Console.WriteLine("Vozilo je uneseno u sustav.");
+
+                    vozila.Add(skuter);
+                } else if (broj =="3"){
+                    Console.WriteLine("Unesite registraciju");
+                    string reg = Console.ReadLine();
+                    IVozilo vozilo = vozila.FirstOrDefault(x => x.Registracija == reg);
+                    if(vozilo != null)
+                    {
+                        Console.WriteLine("Vlasnik je " + vozilo.Vlasnik);
+                    }
                     
+                    
+
+
+
                 }
                 else
                 {
-                    Console.WriteLine("Pogrešan unos godine! Molimo unesite broj.");
+                    Console.WriteLine("Nevaljan unos!");
                 }
             }
+            
+
+
+
+
 
 
 
