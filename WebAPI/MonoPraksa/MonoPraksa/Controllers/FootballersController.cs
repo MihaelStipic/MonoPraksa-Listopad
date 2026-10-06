@@ -8,10 +8,7 @@ namespace MonoPraksa.Controllers
     public class FootballersController : ControllerBase
     {
 
-        private static readonly string[] Players =
-        [
-            "Modric", "Ronaldo", "Messi", "Rakitic", "Yamal", "Olise"
-        ];
+       
 
         private static List<Footballers> Players2 = new List<Footballers>
         {
@@ -47,12 +44,15 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpGet("{id}")]
-        public Footballers Get(int id)
+        //ActionResult jer moze vratiti ili player ili notfound
+        public ActionResult<Footballers> Get(int id)
         {
-            return Players2.FirstOrDefault(x => x.Id == id);
-            
+            var player = Players2.FirstOrDefault(x => x.Id == id);
+            if (player == null) return NotFound($"Player {id} not found");
+            return player;
 
-            
+
+
         }
 
         [HttpGet("filter")]
@@ -68,7 +68,7 @@ namespace MonoPraksa.Controllers
             if (playerAge != null)
                 query = query.Where(x => x.PlayerAge == playerAge);
 
-            return query.ToList();
+            return query;
         }
 
         [HttpPost]
@@ -79,7 +79,7 @@ namespace MonoPraksa.Controllers
             if(!Players2.Any(x=> x.Id== newPlayer.Id))
             {
                 Players2.Add(newPlayer);
-                return Ok("Success");
+                return Created();
             }
             else
             {
@@ -108,21 +108,11 @@ namespace MonoPraksa.Controllers
         public IActionResult DeletePlayer(int id)
         {
 
-            Footballers player = Players2.FirstOrDefault(x => x.Id == id);
+            var player = Players2.FirstOrDefault(x => x.Id == id);
+            if (player == null) return NotFound($"Player {id} not found");
 
-            if (player != null)
-            {
-
-                Players2.Remove(player);
-               
-                return Ok("Success");
-
-
-            }
-            else
-            {
-                return NotFound("Cant find the player");
-            }
+            Players2.Remove(player);
+            return NoContent();
         }
 
       
