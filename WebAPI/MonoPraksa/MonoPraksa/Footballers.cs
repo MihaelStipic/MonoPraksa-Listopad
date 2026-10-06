@@ -5,6 +5,7 @@ namespace MonoPraksa
         public int Id { get; set; }
         public int Rating { get; set; }
 
-        public string Player { get; set; }
+        public string PlayerName { get; set; }
+        public int PlayerAge { get; set; }
     }
 }
