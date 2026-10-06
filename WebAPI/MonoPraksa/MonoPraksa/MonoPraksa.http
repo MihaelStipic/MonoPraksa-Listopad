@@ -1,0 +1,6 @@
+@MonoPraksa_HostAddress = http://localhost:5147
+
+GET {{MonoPraksa_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
