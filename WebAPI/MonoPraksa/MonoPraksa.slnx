@@ -1,5 +1,10 @@
 <Solution>
-  <Project Path="ClassLibrary/ClassLibrary.csproj" Id="c7b49443-ab80-475f-843d-8eaa46b546c9" />
-  <Project Path="MonoPraksa.Service/MonoPraksa.Service.csproj" Id="332ae6b4-4e47-46ac-9ab6-22fa564843d1" />
+  <Project Path="MonoPraksa.Common/MonoPraksa.Common.csproj" Id="4a322b81-093a-4b87-bac9-eb38aac1aaba" />
+  <Project Path="MonoPraksa.Model.Common/MonoPraksa.Model.Common.csproj" Id="8d2bfd1b-7ece-41de-9bd4-a740f5c3bf40" />
+  <Project Path="MonoPraksa.Model/MonoPraksa.Model.csproj" Id="88e1b131-f5c7-43e5-a783-51cd93df29b7" />
+  <Project Path="MonoPraksa.Repository.Common/MonoPraksa.Repository.Common.csproj" Id="4b710931-b0c6-4503-a2e9-693d47bfda6b" />
+  <Project Path="MonoPraksa.Repository/MonoPraksa.Repository.csproj" Id="7ac5305f-36ab-4430-b295-7b4d1cca0bb5" />
+  <Project Path="MonoPraksa.Service.Common/MonoPraksa.Service.Common.csproj" Id="b66a50e8-4c1a-4bf9-b73b-e394d1faa8b1" />
+  <Project Path="MonoPraksa.Service/MonoPraksa.Service.csproj" Id="9e72ed72-1447-4c12-951d-547ebcede546" />
   <Project Path="MonoPraksa/MonoPraksa.csproj" />
 </Solution>

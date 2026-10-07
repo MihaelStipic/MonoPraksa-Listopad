@@ -11,4 +11,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MonoPraksa.Model.Common\MonoPraksa.Model.Common.csproj" />
+    <ProjectReference Include="..\MonoPraksa.Model\MonoPraksa.Model.csproj" />
+    <ProjectReference Include="..\MonoPraksa.Repository.Common\MonoPraksa.Repository.Common.csproj" />
+    <ProjectReference Include="..\MonoPraksa.Repository\MonoPraksa.Repository.csproj" />
+    <ProjectReference Include="..\MonoPraksa.Service.Common\MonoPraksa.Service.Common.csproj" />
+    <ProjectReference Include="..\MonoPraksa.Service\MonoPraksa.Service.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MonoPraksa.Model\MonoPraksa.Model.csproj" />
     <ProjectReference Include="..\MonoPraksa.Repository.Common\MonoPraksa.Repository.Common.csproj" />
-    <ProjectReference Include="..\MonoPraksa.Service.Common\MonoPraksa.Service.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace MonoPraksa.Service
+﻿namespace MonoPraksa.Model.Common
 {
     public class Class1
     {

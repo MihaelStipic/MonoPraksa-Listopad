@@ -1,3 +1,7 @@
+using MonoPraksa.Service;
+using MonoPraksa.Repository;
+using MonoPraksa.Repository.Common;
+using MonoPraksa.Service.Common;
 
 namespace MonoPraksa
 {
@@ -12,6 +16,11 @@ namespace MonoPraksa
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            //builder.Services.AddTransient<IFootballerRepository, FootballerRepository>();
+            builder.Services.AddSingleton<IFootballerRepository, FootballerRepository>();
+            //builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
+            builder.Services.AddScoped<IFootballerService, FootballerService>();
 
             var app = builder.Build();
 
