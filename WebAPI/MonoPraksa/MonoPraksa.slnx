@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="ClassLibrary/ClassLibrary.csproj" Id="c7b49443-ab80-475f-843d-8eaa46b546c9" />
+  <Project Path="MonoPraksa.Service/MonoPraksa.Service.csproj" Id="332ae6b4-4e47-46ac-9ab6-22fa564843d1" />
   <Project Path="MonoPraksa/MonoPraksa.csproj" />
 </Solution>
