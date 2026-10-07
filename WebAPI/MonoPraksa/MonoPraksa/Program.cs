@@ -18,8 +18,8 @@ namespace MonoPraksa
             builder.Services.AddOpenApi();
 
             //builder.Services.AddTransient<IFootballerRepository, FootballerRepository>();
-            builder.Services.AddSingleton<IFootballerRepository, FootballerRepository>();
-            //builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
+            //builder.Services.AddSingleton<IFootballerRepository, FootballerRepository>();
+            builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
             builder.Services.AddScoped<IFootballerService, FootballerService>();
 
             var app = builder.Build();

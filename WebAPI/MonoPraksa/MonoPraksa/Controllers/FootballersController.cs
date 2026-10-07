@@ -29,7 +29,7 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpGet("filter")]
-        public IEnumerable<Footballers> GetFiltered(int? minRating, string? name, int? playerAge)
+        public IEnumerable<Footballers> GetFiltered([FromQuery] int? minRating, [FromQuery] string? name, [FromQuery] int? playerAge)
         {
             return _service.GetFiltered(minRating, name, playerAge);
         }
@@ -41,7 +41,7 @@ namespace MonoPraksa.Controllers
 
             if (!success) return BadRequest("Player already exists!");
 
-            return Created();
+            return CreatedAtAction(nameof(Get), new { id = newPlayer.Id }, newPlayer);
         }
 
         [HttpPut("{id}")]
