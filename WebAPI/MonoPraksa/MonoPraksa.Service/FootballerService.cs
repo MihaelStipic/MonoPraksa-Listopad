@@ -1,63 +1,85 @@
 ﻿using MonoPraksa.Repository;
 using MonoPraksa.Service.Common;
 using MonoPraksa.Repository.Common;
-namespace MonoPraksa.Service
+using MonoPraksa.Model;
+
+namespace MonoPraksa.Service;
+
+public class FootballerService : IFootballerService
 {
-    
+    private readonly IFootballerRepository _repository;
 
-    public class FootballerService : IFootballerService
+    public FootballerService(IFootballerRepository repository)
     {
-        private readonly IFootballerRepository _repository;
+        _repository = repository;
+    }
 
-        public FootballerService(IFootballerRepository repository)
+    public async Task<IEnumerable<Footballer>> GetAll()
+    {
+        return await _repository.GetAllAsync();
+    }
+
+    public async Task<Footballer?> GetById(Guid id)
+    {
+        return await _repository.GetByIdAsync(id); 
+    }
+
+    public async Task<IEnumerable<Footballer>> GetFiltered(int? minRating, string? name, int? playerAge)
+    {
+        var footballers = await _repository.GetAllAsync();
+        var query = footballers.AsQueryable();
+
+        if (minRating != null)
+            query = query.Where(x => x.Rating >= minRating);
+
+        if (!string.IsNullOrEmpty(name))
+            query = query.Where(x => x.PlayerName.Contains(name, StringComparison.OrdinalIgnoreCase));
+
+        if (playerAge != null)
+            query = query.Where(x => (DateTime.Now.Year - x.DateOfBirth.Year) == playerAge); 
+
+        return query.ToList();
+    }
+
+    public async Task<bool> AddPlayer(FootballerPost newPlayer)
+    {
+        var footballer = new Footballer
         {
-            _repository = repository;
+            Id = newPlayer.Id,
+            ClubId = newPlayer.ClubId,
+            PlayerName = newPlayer.PlayerName,
+            DateOfBirth = newPlayer.DateOfBirth,
+            Rating = newPlayer.Rating
+        };
+        var existing = await _repository.GetByIdAsync(footballer.Id);
+        if (existing != null)
+        {
+            return false;
         }
 
-        public IEnumerable<Footballer> GetAll() { return _repository.GetAll(); }
+        await _repository.AddAsync(footballer);
+        return true;
+    }
 
-        public Footballer GetById(int id) {return _repository.GetById(id);}
+    public async Task<bool> EditPlayer(Guid id, FootballerPost editFootballer)
+    {
+        var player = await _repository.GetByIdAsync(id);
+        if (player == null) return false;
 
-        public IEnumerable<Footballer> GetFiltered(int? minRating, string? name, int? playerAge)
-        {
-            var query = _repository.GetAll().AsEnumerable();
+        player.PlayerName = editFootballer.PlayerName;
+        player.Rating = editFootballer.Rating;
+        player.DateOfBirth = editFootballer.DateOfBirth;
 
-            if (minRating != null) query = query.Where(x => x.Rating >= minRating);
-            if (name != null) query = query.Where(x => x.PlayerName == name);
-            if (playerAge != null) query = query.Where(x => (x.DateOfBirth.Year-DateTime.Now.Year) == playerAge);
+        await _repository.UpdateAsync(player); 
+        return true;
+    }
 
-            return query;
-        }
+    public async Task<bool> DeletePlayer(Guid id)
+    {
+        var player = await _repository.GetByIdAsync(id);
+        if (player == null) return false;
 
-        public bool AddPlayer(Footballer newPlayer)
-        {
-            if (_repository.GetById(newPlayer.Id) != null)
-            {
-                return false; 
-            }
-
-            _repository.Add(newPlayer);
-            return true;
-        }
-
-        public bool EditPlayer(int id, Footballer editFootballer)
-        {
-            var player = _repository.GetById(id);
-            if (player == null) return false;
-
-            player.PlayerName = editFootballer.PlayerName;
-            player.Rating = editFootballer.Rating;
-            player.DateOfBirth = editFootballer.DateOfBirth;
-            return true;
-        }
-
-        public bool DeletePlayer(int id)
-        {
-            var player = _repository.GetById(id);
-            if (player == null) return false; 
-
-            _repository.Remove(player);
-            return true;
-        }
+        await _repository.RemoveAsync(player); 
+        return true;
     }
 }

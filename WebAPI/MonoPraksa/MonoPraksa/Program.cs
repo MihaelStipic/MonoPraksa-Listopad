@@ -1,6 +1,8 @@
-using MonoPraksa.Service;
+using Microsoft.EntityFrameworkCore;
+using MonoPraksa.Model;
 using MonoPraksa.Repository;
 using MonoPraksa.Repository.Common;
+using MonoPraksa.Service;
 using MonoPraksa.Service.Common;
 
 namespace MonoPraksa
@@ -22,7 +24,12 @@ namespace MonoPraksa
             builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
             builder.Services.AddScoped<IFootballerService, FootballerService>();
 
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+
             var app = builder.Build();
+
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
