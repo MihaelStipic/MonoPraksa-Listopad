@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace MonoPraksa.Model;
 
-public partial class FootballerPost
+public partial class FootballerAdd
 {
-    public Guid Id { get; set; }
-
     public Guid ClubId { get; set; }
 
     public string PlayerName { get; set; } = null!;
@@ -15,5 +13,5 @@ public partial class FootballerPost
 
     public int Rating { get; set; }
 
-    
+
 }

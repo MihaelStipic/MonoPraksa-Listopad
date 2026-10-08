@@ -37,17 +37,17 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPlayer([FromBody] FootballerPost newPlayer)
+        public async Task<IActionResult> AddPlayer([FromBody] FootballerAdd newPlayer)
         {
-            bool success = await _service.AddPlayer(newPlayer);
+            var created = await _service.AddPlayer(newPlayer);
 
-            if (!success) return BadRequest("Player already exists!");
+            if (created == null) return BadRequest("Player already exists!");
 
-            return CreatedAtAction(nameof(Get), new { id = newPlayer.Id }, newPlayer);
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditPlayer(Guid id, [FromBody] FootballerPost editFootballer)
+        public async Task<IActionResult> EditPlayer(Guid id, [FromBody] FootballerEdit editFootballer)
         {
             bool success = await _service.EditPlayer(id, editFootballer);
 

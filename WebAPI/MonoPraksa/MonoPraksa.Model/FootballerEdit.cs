@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace MonoPraksa.Model;
 
-public partial class Footballer
+public partial class FootballerEdit
 {
-    public Guid Id { get; set; }
 
     public Guid ClubId { get; set; }
 
@@ -15,5 +14,5 @@ public partial class Footballer
 
     public int Rating { get; set; }
 
-    public virtual Club? Club { get; set; }
+    
 }

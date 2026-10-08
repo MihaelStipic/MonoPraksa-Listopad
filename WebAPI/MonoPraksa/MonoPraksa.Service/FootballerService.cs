@@ -41,11 +41,10 @@ public class FootballerService : IFootballerService
         return query.ToList();
     }
 
-    public async Task<bool> AddPlayer(FootballerPost newPlayer)
+    public async Task<Footballer?> AddPlayer(FootballerAdd newPlayer)
     {
         var footballer = new Footballer
         {
-            Id = newPlayer.Id,
             ClubId = newPlayer.ClubId,
             PlayerName = newPlayer.PlayerName,
             DateOfBirth = newPlayer.DateOfBirth,
@@ -54,14 +53,15 @@ public class FootballerService : IFootballerService
         var existing = await _repository.GetByIdAsync(footballer.Id);
         if (existing != null)
         {
-            return false;
+            return null;
         }
 
         await _repository.AddAsync(footballer);
-        return true;
+        return footballer;
     }
 
-    public async Task<bool> EditPlayer(Guid id, FootballerPost editFootballer)
+    //FootballerEdit koristimo a ne Footballer, jer nece raditi PUT zahtjev, trazit ce Club _club iako ga ne mozemo staviti
+    public async Task<bool> EditPlayer(Guid id, FootballerEdit editFootballer)
     {
         var player = await _repository.GetByIdAsync(id);
         if (player == null) return false;
