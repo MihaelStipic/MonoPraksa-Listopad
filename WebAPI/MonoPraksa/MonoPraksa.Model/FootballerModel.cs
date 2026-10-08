@@ -1,11 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MonoPraksa
 {
-    public class Footballers
+    public class Footballer
     {
         public int Id { get; set; }
         public int Rating { get; set; }
-
+        [Required]
         public string PlayerName { get; set; }
-        public int PlayerAge { get; set; }
+        public DateOnly DateOfBirth { get; set; }
     }
 }

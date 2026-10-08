@@ -2,11 +2,11 @@
 {
     public interface IFootballerService
     {
-        IEnumerable<Footballers> GetAll();
-        Footballers GetById(int id);
-        IEnumerable<Footballers> GetFiltered(int? minRating, string? name, int? playerAge);
-        bool AddPlayer(Footballers newPlayer);
-        bool EditPlayer(int id, Footballers editFootballer);
+        IEnumerable<Footballer> GetAll();
+        Footballer GetById(int id);
+        IEnumerable<Footballer> GetFiltered(int? minRating, string? name, int? playerAge);
+        bool AddPlayer(Footballer newPlayer);
+        bool EditPlayer(int id, Footballer editFootballer);
         bool DeletePlayer(int id);
     }
 }

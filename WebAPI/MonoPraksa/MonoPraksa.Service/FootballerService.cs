@@ -14,22 +14,22 @@ namespace MonoPraksa.Service
             _repository = repository;
         }
 
-        public IEnumerable<Footballers> GetAll() { return _repository.GetAll(); }
+        public IEnumerable<Footballer> GetAll() { return _repository.GetAll(); }
 
-        public Footballers GetById(int id) {return _repository.GetById(id);}
+        public Footballer GetById(int id) {return _repository.GetById(id);}
 
-        public IEnumerable<Footballers> GetFiltered(int? minRating, string? name, int? playerAge)
+        public IEnumerable<Footballer> GetFiltered(int? minRating, string? name, int? playerAge)
         {
             var query = _repository.GetAll().AsEnumerable();
 
             if (minRating != null) query = query.Where(x => x.Rating >= minRating);
             if (name != null) query = query.Where(x => x.PlayerName == name);
-            if (playerAge != null) query = query.Where(x => x.PlayerAge == playerAge);
+            if (playerAge != null) query = query.Where(x => (x.DateOfBirth.Year-DateTime.Now.Year) == playerAge);
 
             return query;
         }
 
-        public bool AddPlayer(Footballers newPlayer)
+        public bool AddPlayer(Footballer newPlayer)
         {
             if (_repository.GetById(newPlayer.Id) != null)
             {
@@ -40,14 +40,14 @@ namespace MonoPraksa.Service
             return true;
         }
 
-        public bool EditPlayer(int id, Footballers editFootballer)
+        public bool EditPlayer(int id, Footballer editFootballer)
         {
             var player = _repository.GetById(id);
             if (player == null) return false;
 
             player.PlayerName = editFootballer.PlayerName;
             player.Rating = editFootballer.Rating;
-            player.PlayerAge = editFootballer.PlayerAge;
+            player.DateOfBirth = editFootballer.DateOfBirth;
             return true;
         }
 

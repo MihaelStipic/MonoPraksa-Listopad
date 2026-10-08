@@ -4,9 +4,9 @@ namespace MonoPraksa.Repository.Common
 {
     public interface IFootballerRepository
     {
-        IEnumerable<Footballers> GetAll();
-        Footballers GetById(int id);
-        void Add(Footballers player);
-        void Remove(Footballers player);
+        IEnumerable<Footballer> GetAll();
+        Footballer GetById(int id);
+        void Add(Footballer player);
+        void Remove(Footballer player);
     }
 }

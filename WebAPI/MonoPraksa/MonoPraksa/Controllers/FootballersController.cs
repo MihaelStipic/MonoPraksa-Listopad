@@ -15,13 +15,13 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Footballers> Get()
+        public IEnumerable<Footballer> Get()
         {
             return _service.GetAll();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Footballers> Get(int id)
+        public ActionResult<Footballer> Get(int id)
         {
             var player = _service.GetById(id);
             if (player == null) return NotFound($"Player {id} not found");
@@ -29,13 +29,13 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpGet("filter")]
-        public IEnumerable<Footballers> GetFiltered([FromQuery] int? minRating, [FromQuery] string? name, [FromQuery] int? playerAge)
+        public IEnumerable<Footballer> GetFiltered([FromQuery] int? minRating, [FromQuery] string? name, [FromQuery] int? playerAge)
         {
             return _service.GetFiltered(minRating, name, playerAge);
         }
 
         [HttpPost]
-        public IActionResult AddPlayer([FromBody] Footballers newPlayer)
+        public IActionResult AddPlayer([FromBody] Footballer newPlayer)
         {
             bool success = _service.AddPlayer(newPlayer);
 
@@ -45,7 +45,7 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult EditPlayer(int id, [FromBody] Footballers editFootballer)
+        public IActionResult EditPlayer(int id, [FromBody] Footballer editFootballer)
         {
             bool success = _service.EditPlayer(id, editFootballer);
 
