@@ -30,6 +30,7 @@ namespace MonoPraksa.Service
             var user = new User
             {
                 Email = email,
+                // registracija: BCrypt sam smisli salt, napravi kašu, vrati sve u jednom tekstu
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Role = "User"
             };
