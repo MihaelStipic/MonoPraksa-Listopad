@@ -33,7 +33,7 @@ namespace MonoPraksa.Repository
             return await _db.Footballers.FirstOrDefaultAsync(f => f.Id == id);
         }
 
-        public async Task<IEnumerable<Footballer>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
+        public async Task<IEnumerable<FootballerWithClub>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
         {
             //vraca IQueryable<Footballer>
             var query = _db.Footballers.AsQueryable(); // samo upit, nema baze.. ne izvršava SQL.
@@ -51,8 +51,18 @@ namespace MonoPraksa.Repository
 
                 query = query.Where(x => (DateTime.Now.Year - x.DateOfBirth.Year) == playerAge);
             }
-            //vraca IEnumerable
-            return await query.ToListAsync(); // OVDJE ide u bazu, zato await
+            //vraca IEnumearble
+            return await query
+                .Select(f => new FootballerWithClub
+                {
+                    Id = f.Id,
+                    ClubId = f.ClubId,
+                    PlayerName = f.PlayerName,
+                    DateOfBirth = f.DateOfBirth,
+                    Rating = f.Rating,
+                    ClubName = f.Club!.Name
+                })
+                .ToListAsync();
 
         }
 

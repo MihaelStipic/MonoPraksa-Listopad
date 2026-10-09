@@ -17,41 +17,41 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<FootballerWithClub>> Get()
+        public async Task<IEnumerable<FootballerWithClub>> GetAsync()
         {
-            return await _service.GetAll();
+            return await _service.GetAllAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Footballer>> Get(Guid id)
+        public async Task<ActionResult<Footballer>> GetAsync(Guid id)
         {
-            var player = await _service.GetById(id);
+            var player = await _service.GetByIdAsync(id);
             if (player == null) return NotFound($"Player {id} not found");
             return player;
         }
 
         [HttpGet("filter")]
-        public Task<IEnumerable<Footballer>> GetFiltered([FromQuery] int? minRating, [FromQuery] string? name, [FromQuery] int? playerAge)
+        public Task<IEnumerable<FootballerWithClub>> GetFilteredAsync([FromQuery] int? minRating, [FromQuery] string? name, [FromQuery] int? playerAge)
         {
-            return _service.GetFiltered(minRating, name, playerAge);
+            return _service.GetFilteredAsync(minRating, name, playerAge);
         }
 
         
 
         [HttpPost]
-        public async Task<IActionResult> AddPlayer([FromBody] FootballerAdd newPlayer)
+        public async Task<IActionResult> AddPlayerAsync([FromBody] FootballerAdd newPlayer)
         {
-            var created = await _service.AddPlayer(newPlayer);
+            var created = await _service.AddPlayerAsync(newPlayer);
 
             if (created == null) return BadRequest("Club does not exist.");
 
-            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            return CreatedAtAction(nameof(GetAsync), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditPlayer(Guid id, [FromBody] FootballerEdit editFootballer)
+        public async Task<IActionResult> EditPlayerAsync(Guid id, [FromBody] FootballerEdit editFootballer)
         {
-            bool success = await _service.EditPlayer(id, editFootballer);
+            bool success = await _service.EditPlayerAsync(id, editFootballer);
 
             if (!success) return NotFound($"Player {id} not found");
 
@@ -59,9 +59,9 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePlayer(Guid id)
+        public async Task<IActionResult> DeletePlayerAsync(Guid id)
         {
-            bool success = await _service.DeletePlayer(id);
+            bool success = await _service.DeletePlayerAsync(id);
 
             if (!success) return NotFound($"Player {id} not found");
 

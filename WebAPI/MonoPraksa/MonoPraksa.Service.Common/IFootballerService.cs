@@ -4,12 +4,12 @@ namespace MonoPraksa.Service.Common
 {
     public interface IFootballerService
     {
-        Task<IEnumerable<FootballerWithClub>> GetAll();
-        Task<Footballer> GetById(Guid id);
-        Task<IEnumerable<Footballer>> GetFiltered(int? minRating, string? name, int? playerAge);
+        Task<IEnumerable<FootballerWithClub>> GetAllAsync();
+        Task<Footballer> GetByIdAsync(Guid id);
+        Task<IEnumerable<FootballerWithClub>> GetFilteredAsync(int? minRating, string? name, int? playerAge);
         
-        Task<Footballer?> AddPlayer(FootballerAdd newPlayer);
-        Task<bool> EditPlayer(Guid id, FootballerEdit editFootballer);
-        Task<bool> DeletePlayer(Guid id);
+        Task<Footballer?> AddPlayerAsync(FootballerAdd newPlayer);
+        Task<bool> EditPlayerAsync(Guid id, FootballerEdit editFootballer);
+        Task<bool> DeletePlayerAsync(Guid id);
     }
 }

@@ -14,30 +14,30 @@ public class FootballerService : IFootballerService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<FootballerWithClub>> GetAll()
+    public async Task<IEnumerable<FootballerWithClub>> GetAllAsync()
     {
         return await _repository.GetAllAsync();
     }
 
-    public async Task<Footballer?> GetById(Guid id)
+    public async Task<Footballer?> GetByIdAsync(Guid id)
     {
         return await _repository.GetByIdAsync(id); 
     }
 
-    public async Task<IEnumerable<Footballer>> GetFiltered(int? minRating, string? name, int? playerAge)
+    public async Task<IEnumerable<FootballerWithClub>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
     {
         return await _repository.GetFilteredAsync(minRating, name, playerAge);
     }
 
     
-    public async Task<Footballer?> AddPlayer(FootballerAdd newPlayer)
+    public async Task<Footballer?> AddPlayerAsync(FootballerAdd newPlayer)
     {
         if (!await _repository.ClubExistsAsync(newPlayer.ClubId))
             return null;
 
         var footballer = new Footballer
         {
-            Id = Guid.NewGuid(),
+           
             ClubId = newPlayer.ClubId,
             PlayerName = newPlayer.PlayerName,
             DateOfBirth = newPlayer.DateOfBirth,
@@ -49,7 +49,7 @@ public class FootballerService : IFootballerService
     }
 
     //FootballerEdit koristimo a ne Footballer, jer nece raditi PUT zahtjev, trazit ce Club _club iako ga ne mozemo staviti
-    public async Task<bool> EditPlayer(Guid id, FootballerEdit editFootballer)
+    public async Task<bool> EditPlayerAsync(Guid id, FootballerEdit editFootballer)
     {
         var player = await _repository.GetByIdAsync(id);
         if (player == null) return false;
@@ -62,7 +62,7 @@ public class FootballerService : IFootballerService
         return true;
     }
 
-    public async Task<bool> DeletePlayer(Guid id)
+    public async Task<bool> DeletePlayerAsync(Guid id)
     {
         var player = await _repository.GetByIdAsync(id);
         if (player == null) return false;
