@@ -14,9 +14,18 @@ namespace MonoPraksa.Repository
         }
 
 
-        public async Task<IEnumerable<Footballer>> GetAllAsync()
+        public async Task<IEnumerable<FootballerWithClub>> GetAllAsync()
         {
-            return await _db.Footballers.ToListAsync();
+            return await _db.Footballers.Select(f => new FootballerWithClub
+            {
+                Id = f.Id,
+                ClubId = f.ClubId,
+                PlayerName = f.PlayerName,
+                DateOfBirth = f.DateOfBirth,
+                Rating = f.Rating,
+                ClubName = f.Club!.Name
+
+            }).ToListAsync();
         }
 
         public async Task<Footballer> GetByIdAsync(Guid id)
@@ -46,7 +55,12 @@ namespace MonoPraksa.Repository
             return await query.ToListAsync(); // OVDJE ide u bazu, zato await
 
         }
-        
+
+        public async Task<bool> ClubExistsAsync(Guid clubId)
+        {
+            return await _db.Clubs.AnyAsync(c => c.Id == clubId);
+        }
+
         public async Task AddAsync(Footballer player)
         {
             await _db.Footballers.AddAsync(player);

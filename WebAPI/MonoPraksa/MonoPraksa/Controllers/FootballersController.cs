@@ -17,7 +17,7 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Footballer>> Get()
+        public async Task<IEnumerable<FootballerWithClub>> Get()
         {
             return await _service.GetAll();
         }
@@ -36,12 +36,14 @@ namespace MonoPraksa.Controllers
             return _service.GetFiltered(minRating, name, playerAge);
         }
 
+        
+
         [HttpPost]
         public async Task<IActionResult> AddPlayer([FromBody] FootballerAdd newPlayer)
         {
             var created = await _service.AddPlayer(newPlayer);
 
-            if (created == null) return BadRequest("Player already exists!");
+            if (created == null) return BadRequest("Club does not exist.");
 
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }

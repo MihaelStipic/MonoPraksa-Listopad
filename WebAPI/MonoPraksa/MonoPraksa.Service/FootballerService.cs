@@ -14,7 +14,7 @@ public class FootballerService : IFootballerService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<Footballer>> GetAll()
+    public async Task<IEnumerable<FootballerWithClub>> GetAll()
     {
         return await _repository.GetAllAsync();
     }
@@ -29,20 +29,20 @@ public class FootballerService : IFootballerService
         return await _repository.GetFilteredAsync(minRating, name, playerAge);
     }
 
+    
     public async Task<Footballer?> AddPlayer(FootballerAdd newPlayer)
     {
+        if (!await _repository.ClubExistsAsync(newPlayer.ClubId))
+            return null;
+
         var footballer = new Footballer
         {
+            Id = Guid.NewGuid(),
             ClubId = newPlayer.ClubId,
             PlayerName = newPlayer.PlayerName,
             DateOfBirth = newPlayer.DateOfBirth,
             Rating = newPlayer.Rating
         };
-        var existing = await _repository.GetByIdAsync(footballer.Id);
-        if (existing != null)
-        {
-            return null;
-        }
 
         await _repository.AddAsync(footballer);
         return footballer;
