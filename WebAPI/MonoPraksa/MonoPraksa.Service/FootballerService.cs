@@ -14,30 +14,29 @@ public class FootballerService : IFootballerService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<FootballerWithClub>> GetAllAsync()
+    public async Task<IEnumerable<FootballerDto>> GetAllAsync()
     {
         return await _repository.GetAllAsync();
     }
 
-    public async Task<Footballer?> GetByIdAsync(Guid id)
+    public async Task<FootballerDto?> GetByIdAsync(Guid id)
     {
         return await _repository.GetByIdAsync(id); 
     }
 
-    public async Task<IEnumerable<FootballerWithClub>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
+    public async Task<IEnumerable<FootballerDto>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
     {
         return await _repository.GetFilteredAsync(minRating, name, playerAge);
     }
 
-    
-    public async Task<Footballer?> AddPlayerAsync(FootballerAdd newPlayer)
+
+    public async Task<FootballerDto?> AddPlayerAsync(FootballerAdd newPlayer)
     {
         if (!await _repository.ClubExistsAsync(newPlayer.ClubId))
             return null;
 
         var footballer = new Footballer
         {
-           
             ClubId = newPlayer.ClubId,
             PlayerName = newPlayer.PlayerName,
             DateOfBirth = newPlayer.DateOfBirth,
@@ -45,7 +44,7 @@ public class FootballerService : IFootballerService
         };
 
         await _repository.AddAsync(footballer);
-        return footballer;
+        return await _repository.GetByIdAsync(footballer.Id);
     }
 
     //FootballerEdit koristimo a ne Footballer, jer nece raditi PUT zahtjev, trazit ce Club _club iako ga ne mozemo staviti
@@ -54,11 +53,15 @@ public class FootballerService : IFootballerService
         var player = await _repository.GetByIdAsync(id);
         if (player == null) return false;
 
+        if (!await _repository.ClubExistsAsync(editFootballer.ClubId))
+            return false;
+
         player.PlayerName = editFootballer.PlayerName;
         player.Rating = editFootballer.Rating;
         player.DateOfBirth = editFootballer.DateOfBirth;
+        player.ClubId = editFootballer.ClubId;
 
-        await _repository.UpdateAsync(player); 
+        await _repository.UpdateAsync(player);
         return true;
     }
 

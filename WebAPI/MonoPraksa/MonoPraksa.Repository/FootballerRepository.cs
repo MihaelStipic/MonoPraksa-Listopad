@@ -14,9 +14,9 @@ namespace MonoPraksa.Repository
         }
 
 
-        public async Task<IEnumerable<FootballerWithClub>> GetAllAsync()
+        public async Task<IEnumerable<FootballerDto>> GetAllAsync()
         {
-            return await _db.Footballers.Select(f => new FootballerWithClub
+            return await _db.Footballers.Select(f => new FootballerDto
             {
                 Id = f.Id,
                 ClubId = f.ClubId,
@@ -28,12 +28,23 @@ namespace MonoPraksa.Repository
             }).ToListAsync();
         }
 
-        public async Task<Footballer> GetByIdAsync(Guid id)
+        public async Task<FootballerDto?> GetByIdAsync(Guid id)
         {
-            return await _db.Footballers.FirstOrDefaultAsync(f => f.Id == id);
+            return await _db.Footballers
+                .Where(f => f.Id == id)
+                .Select(f => new FootballerDto
+                {
+                    Id = f.Id,
+                    ClubId = f.ClubId,
+                    PlayerName = f.PlayerName,
+                    DateOfBirth = f.DateOfBirth,
+                    Rating = f.Rating,
+                    ClubName = f.Club!.Name
+                })
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<FootballerWithClub>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
+        public async Task<IEnumerable<FootballerDto>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
         {
             //vraca IQueryable<Footballer>
             var query = _db.Footballers.AsQueryable(); // samo upit, nema baze.. ne izvršava SQL.
@@ -53,7 +64,7 @@ namespace MonoPraksa.Repository
             }
             //vraca IEnumearble
             return await query
-                .Select(f => new FootballerWithClub
+                .Select(f => new FootballerDto
                 {
                     Id = f.Id,
                     ClubId = f.ClubId,
@@ -76,14 +87,29 @@ namespace MonoPraksa.Repository
             await _db.Footballers.AddAsync(player);
             await _db.SaveChangesAsync();
         }
-        public async Task UpdateAsync(Footballer player)
+        public async Task UpdateAsync(FootballerDto player)
         {
-            _db.Footballers.Update(player);
+            var entity = await _db.Footballers.FindAsync(player.Id);
+            if (entity == null) return;
+
+            entity.PlayerName = player.PlayerName;
+            entity.ClubId = player.ClubId;
+            entity.DateOfBirth = player.DateOfBirth;
+            entity.Rating = player.Rating;
+
             await _db.SaveChangesAsync();
         }
-        public async Task RemoveAsync(Footballer player)
+        public async Task RemoveAsync(FootballerDto player)
         {
-            _db.Footballers.Remove(player);
+            var playerw = new Footballer
+            {
+                Id = player.Id,
+                PlayerName = player.PlayerName,
+                ClubId = player.ClubId,
+                DateOfBirth = player.DateOfBirth,
+                Rating = player.Rating
+            };
+            _db.Footballers.Remove(playerw);
             await _db.SaveChangesAsync();
         }
 

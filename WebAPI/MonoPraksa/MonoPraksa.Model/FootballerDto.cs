@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MonoPraksa.Model
 {
-    public class FootballerWithClub
+    public class FootballerDto
     {
         public Guid Id { get; set; }
         public Guid ClubId { get; set; }
