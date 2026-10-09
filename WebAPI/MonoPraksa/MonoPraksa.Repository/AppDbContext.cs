@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using MonoPraksa.Model;
 
-namespace MonoPraksa.Model;
+
+namespace MonoPraksa.Repository;
 
 public partial class AppDbContext : DbContext
 {
