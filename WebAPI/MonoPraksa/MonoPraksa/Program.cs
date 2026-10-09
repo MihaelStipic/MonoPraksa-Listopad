@@ -21,6 +21,8 @@ namespace MonoPraksa
 
             //builder.Services.AddTransient<IFootballerRepository, FootballerRepository>();
             //builder.Services.AddSingleton<IFootballerRepository, FootballerRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
             builder.Services.AddScoped<IFootballerService, FootballerService>();
 

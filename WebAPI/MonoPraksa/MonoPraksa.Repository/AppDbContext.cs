@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using MonoPraksa.Model;
 
-
 namespace MonoPraksa.Repository;
 
 public partial class AppDbContext : DbContext
@@ -16,6 +15,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Club> Clubs { get; set; }
 
     public virtual DbSet<Footballer> Footballers { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -58,6 +59,29 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.ClubId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("footballers_club_id_fkey");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("users_pkey");
+
+            entity.ToTable("users");
+
+            entity.HasIndex(e => e.Email).IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("gen_random_uuid()")
+                .HasColumnName("id");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
+            entity.Property(e => e.PasswordHash)
+                .HasMaxLength(255)
+                .HasColumnName("password_hash");
+            entity.Property(e => e.Role)
+                .HasMaxLength(20)
+                .HasDefaultValueSql("'User'::character varying")
+                .HasColumnName("role");
         });
 
         OnModelCreatingPartial(modelBuilder);
