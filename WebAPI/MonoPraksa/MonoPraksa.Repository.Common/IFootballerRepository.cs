@@ -7,6 +7,7 @@ namespace MonoPraksa.Repository.Common
     {
         Task<IEnumerable<Footballer>> GetAllAsync();
         Task<Footballer> GetByIdAsync(Guid id);
+        Task<IEnumerable<Footballer>> GetFilteredAsync(int? minRating, string? name, int? playerAge);
         Task AddAsync(Footballer player);
         Task UpdateAsync(Footballer player);
         Task RemoveAsync(Footballer player);

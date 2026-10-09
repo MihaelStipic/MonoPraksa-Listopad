@@ -26,19 +26,7 @@ public class FootballerService : IFootballerService
 
     public async Task<IEnumerable<Footballer>> GetFiltered(int? minRating, string? name, int? playerAge)
     {
-        var footballers = await _repository.GetAllAsync();
-        var query = footballers.AsQueryable();
-
-        if (minRating != null)
-            query = query.Where(x => x.Rating >= minRating);
-
-        if (!string.IsNullOrEmpty(name))
-            query = query.Where(x => x.PlayerName.Contains(name, StringComparison.OrdinalIgnoreCase));
-
-        if (playerAge != null)
-            query = query.Where(x => (DateTime.Now.Year - x.DateOfBirth.Year) == playerAge); 
-
-        return query.ToList();
+        return await _repository.GetFilteredAsync(minRating, name, playerAge);
     }
 
     public async Task<Footballer?> AddPlayer(FootballerAdd newPlayer)
