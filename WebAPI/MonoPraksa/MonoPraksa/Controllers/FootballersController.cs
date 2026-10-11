@@ -3,6 +3,7 @@ using MonoPraksa.Service;
 using MonoPraksa.Service.Common;
 using Microsoft.EntityFrameworkCore;
 using MonoPraksa.Model;
+using Microsoft.AspNetCore.Authorization;
 namespace MonoPraksa.Controllers
 {
     [ApiController]
@@ -31,9 +32,9 @@ namespace MonoPraksa.Controllers
         }
 
         [HttpGet("filter")]
-        public Task<IEnumerable<FootballerDto>> GetFiltered([FromQuery] int? minRating, [FromQuery] string? name, [FromQuery] int? playerAge)
+        public async Task<IEnumerable<FootballerDto>> GetFiltered([FromQuery] int? minRating, [FromQuery] string? name, [FromQuery] int? playerAge)
         {
-            return _service.GetFilteredAsync(minRating, name, playerAge);
+            return await _service.GetFilteredAsync(minRating, name, playerAge);
         }
 
         
@@ -59,7 +60,7 @@ namespace MonoPraksa.Controllers
 
             return NoContent();
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayer(Guid id)
         {

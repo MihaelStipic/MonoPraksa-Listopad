@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MonoPraksa.Model;
 using MonoPraksa.Repository;
 using MonoPraksa.Repository.Common;
@@ -13,27 +16,37 @@ namespace MonoPraksa
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
-            //builder.Services.AddTransient<IFootballerRepository, FootballerRepository>();
-            //builder.Services.AddSingleton<IFootballerRepository, FootballerRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
             builder.Services.AddScoped<IFootballerService, FootballerService>();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+
+            //Zato što [Authorize] sam po sebi ne zna kako provjeriti tko si.
+            //kad stigne token, provjeri mu potpis mojim tajnim ključem i odbij ga ako je istekao
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true
+                    };
+                });
+
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
-            
-
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
@@ -41,8 +54,8 @@ namespace MonoPraksa
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
