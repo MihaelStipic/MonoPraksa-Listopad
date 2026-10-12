@@ -2,40 +2,39 @@
 using MonoPraksa.Model;
 using MonoPraksa.Repository.Common;
 
-namespace MonoPraksa.Repository
+namespace MonoPraksa.Repository;
+
+public class UserRepository : IUserRepository
 {
-    public class UserRepository : IUserRepository
+    private readonly AppDbContext _db;
+
+    public UserRepository(AppDbContext db)
     {
-        private readonly AppDbContext _db;
+        _db = db;
+    }
+    public async Task<IEnumerable<UserDto>> GetUsersAsync()
+    {
+        return await _db.Users.Select(f => new UserDto
+        {
+            Id = f.Id,
+            Email = f.Email,
+            Role = f.Role
 
-        public UserRepository(AppDbContext db)
-        {
-            _db = db;
-        }
-        public async Task<IEnumerable<UserDto>> GetUsersAsync()
-        {
-            return await _db.Users.Select(f => new UserDto
-            {
-                Id = f.Id,
-                Email = f.Email,
-                Role = f.Role
+        }).ToListAsync();
+    }
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+        return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+    }
 
-            }).ToListAsync();
-        }
-        public async Task<User?> GetByEmailAsync(string email)
-        {
-            return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
-        }
+    public async Task<bool> EmailExistsAsync(string email)
+    {
+        return await _db.Users.AnyAsync(u => u.Email == email);
+    }
 
-        public async Task<bool> EmailExistsAsync(string email)
-        {
-            return await _db.Users.AnyAsync(u => u.Email == email);
-        }
-
-        public async Task AddAsync(User user)
-        {
-            await _db.Users.AddAsync(user);
-            await _db.SaveChangesAsync();
-        }
+    public async Task AddAsync(User user)
+    {
+        await _db.Users.AddAsync(user);
+        await _db.SaveChangesAsync();
     }
 }

@@ -51,7 +51,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.ClubId).HasColumnName("club_id");
             entity.Property(e => e.DateOfBirth).HasColumnName("date_of_birth");
             entity.Property(e => e.PlayerName)
-                .HasMaxLength(100)
+                .HasMaxLength(60)
                 .HasColumnName("player_name");
             entity.Property(e => e.Rating).HasColumnName("rating");
 

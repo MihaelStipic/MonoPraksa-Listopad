@@ -4,77 +4,80 @@ using MonoPraksa.Service.Common;
 using Microsoft.EntityFrameworkCore;
 using MonoPraksa.Model;
 using Microsoft.AspNetCore.Authorization;
-namespace MonoPraksa.Controllers
+namespace MonoPraksa.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+[Authorize]
+public class FootballersController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    [Authorize]
-    public class FootballersController : ControllerBase
+    private readonly IFootballerService _service;
+
+    public FootballersController(IFootballerService service)
     {
-        private readonly IFootballerService _service;
-
-        public FootballersController(IFootballerService service)
-        {
-            _service = service;
-        }
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IEnumerable<FootballerDto>> Get()
-        {
-            return await _service.GetAllAsync();
-        }
-
-        
-
-        [AllowAnonymous]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FootballerDto>> Get(Guid id)
-        {
-            var player = await _service.GetByIdAsync(id);
-            if (player == null) return NotFound($"Player {id} not found");
-            return player;
-        }
-
-        [AllowAnonymous]
-        [HttpGet("filter")]
-        public async Task<IEnumerable<FootballerDto>> GetFiltered([FromQuery] int? minRating, [FromQuery] string? name, [FromQuery] int? playerAge)
-        {
-            return await _service.GetFilteredAsync(minRating, name, playerAge);
-        }
+        _service = service;
+    }
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IEnumerable<FootballerDto>> GetAll(
+        [FromQuery] int? minRating,
+        [FromQuery] string? name,
+        [FromQuery] int? playerAge)
+    {
+        return await _service.GetFilteredAsync(minRating, name, playerAge);
+    }
 
 
-        [Authorize(Roles = Roles.Admin)]
-        [HttpPost]
-        public async Task<IActionResult> AddPlayer([FromBody] FootballerAdd newPlayer)
-        {
-            var created = await _service.AddPlayerAsync(newPlayer);
 
-            if (created == null) return BadRequest("Club does not exist.");
+    [AllowAnonymous]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<FootballerDto>> GetById(Guid id)
+    {
+        var player = await _service.GetByIdAsync(id);
+        if (player == null) return NotFound($"Player {id} not found");
+        return player;
+    }
 
-            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
-        }
-
-        [Authorize(Roles = Roles.Admin)]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditPlayer(Guid id, [FromBody] FootballerEdit editFootballer)
-        {
+    
 
 
-            bool success = await _service.EditPlayerAsync(id, editFootballer);
+    [Authorize(Roles = Roles.Admin)]
+    [HttpPost]
+    public async Task<IActionResult> AddPlayer([FromBody] FootballerAdd newPlayer)
+    {
+        if (newPlayer.DateOfBirth > DateOnly.FromDateTime(DateTime.UtcNow)
+            || newPlayer.DateOfBirth < new DateOnly(1900, 1, 1))
+            return BadRequest("Invalid date of birth.");
 
-            if (!success) return NotFound($"Player {id} not found");
+        var created = await _service.AddPlayerAsync(newPlayer);
 
-            return NoContent();
-        }
-        [Authorize(Roles = Roles.Admin)]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePlayer(Guid id)
-        {
-            bool success = await _service.DeletePlayerAsync(id);
+        if (created == null) return BadRequest("Club does not exist.");
 
-            if (!success) return NotFound($"Player {id} not found");
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+    }
 
-            return NoContent();
-        }
+    [Authorize(Roles = Roles.Admin)]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> EditPlayer(Guid id, [FromBody] FootballerEdit editFootballer)
+    {
+        if (editFootballer.DateOfBirth > DateOnly.FromDateTime(DateTime.UtcNow)
+            || editFootballer.DateOfBirth < new DateOnly(1900, 1, 1))
+            return BadRequest("Invalid date of birth.");
+
+        bool success = await _service.EditPlayerAsync(id, editFootballer);
+
+        if (!success) return NotFound($"Player {id} not found");
+
+        return NoContent();
+    }
+    [Authorize(Roles = Roles.Admin)]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePlayer(Guid id)
+    {
+        bool success = await _service.DeletePlayerAsync(id);
+
+        if (!success) return NotFound($"Player {id} not found");
+
+        return NoContent();
     }
 }

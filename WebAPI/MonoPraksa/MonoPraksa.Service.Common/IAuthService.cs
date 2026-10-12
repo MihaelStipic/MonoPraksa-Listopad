@@ -4,11 +4,12 @@ using System.Text;
 
 using MonoPraksa.Model;
 
-namespace MonoPraksa.Service.Common
+namespace MonoPraksa.Service.Common;
+
+public interface IAuthService
 {
-    public interface IAuthService
-    {
-        Task<bool> RegisterAsync(RegisterRequest request);
-        Task<AuthResponse?> LoginAsync(LoginRequest request);
-    }
+    Task<bool> RegisterAsync(RegisterRequest request);
+
+   
+    Task<AuthResponse?> LoginAsync(LoginRequest request);
 }

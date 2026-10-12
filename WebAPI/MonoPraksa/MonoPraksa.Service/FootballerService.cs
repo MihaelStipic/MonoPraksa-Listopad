@@ -19,6 +19,8 @@ public class FootballerService : IFootballerService
         return await _repository.GetAllAsync();
     }
 
+    
+
     public async Task<FootballerDto?> GetByIdAsync(Guid id)
     {
         return await _repository.GetByIdAsync(id); 
