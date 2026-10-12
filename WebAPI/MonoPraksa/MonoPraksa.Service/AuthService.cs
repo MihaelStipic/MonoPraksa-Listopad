@@ -15,16 +15,16 @@ public class AuthService : IAuthService
         _tokenService = tokenService;
     }
 
-    public async Task<IEnumerable<UserDto>> GetUsersAsync()
+    public Task<IEnumerable<UserDto>> GetUsersAsync()
     {
-        return await _users.GetUsersAsync();
+        return  _users.GetUsersAsync();
     }
 
-    public async Task<bool> RegisterAsync(RegisterRequest request)
+    public  async Task<bool> RegisterAsync(RegisterRequest request)
     {
         var email = request.Email.Trim().ToLowerInvariant();
 
-        if (await _users.EmailExistsAsync(email))
+        if ( await _users.EmailExistsAsync(email))
             return false;
 
         var user = new User
@@ -35,7 +35,7 @@ public class AuthService : IAuthService
             Role = Roles.User
         };
 
-        await _users.AddAsync(user);
+         await _users.AddAsync(user);
         return true;
     }
 

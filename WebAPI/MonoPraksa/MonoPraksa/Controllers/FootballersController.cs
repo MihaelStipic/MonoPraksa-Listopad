@@ -33,7 +33,7 @@ public class FootballersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<FootballerDto>> GetById(Guid id)
     {
-        throw new Exception("test");
+        
         var player = await _service.GetByIdAsync(id);
         if (player == null) return NotFound($"Player {id} not found");
         return player;

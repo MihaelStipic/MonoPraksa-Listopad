@@ -18,14 +18,14 @@ public class FootballerService : IFootballerService
 
     
 
-    public async Task<FootballerDto?> GetByIdAsync(Guid id)
+    public Task<FootballerDto?> GetByIdAsync(Guid id)
     {
-        return await _repository.GetByIdAsync(id); 
+        return  _repository.GetByIdAsync(id); 
     }
 
-    public async Task<IEnumerable<FootballerDto>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
+    public  Task<IEnumerable<FootballerDto>> GetFilteredAsync(int? minRating, string? name, int? playerAge)
     {
-        return await _repository.GetFilteredAsync(minRating, name, playerAge);
+        return  _repository.GetFilteredAsync(minRating, name, playerAge);
     }
 
 
