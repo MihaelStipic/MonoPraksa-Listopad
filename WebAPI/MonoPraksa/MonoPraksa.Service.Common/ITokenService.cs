@@ -1,9 +1,8 @@
 ﻿using MonoPraksa.Model;
 
-namespace MonoPraksa.Service.Common
+namespace MonoPraksa.Service.Common;
+
+public interface ITokenService
 {
-    public interface ITokenService
-    {
-        string CreateToken(User user);
-    }
+    string CreateToken(User user);
 }
