@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using System.Text.Json;
 using static MonoPraksa.Middleware.AppExceptions;
 
@@ -25,6 +26,11 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
+            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "anonymous";
+            var email = context.User.FindFirst(ClaimTypes.Email)?.Value ?? "anonymous";
+            var method = context.Request.Method;
+            var path = context.Request.Path;
+
             var (status, message) = ex switch
             {
                 NotFoundException => (404, ex.Message),
@@ -33,8 +39,12 @@ public class ExceptionMiddleware
                 _ => (500, "Došlo je do greške na serveru.")
             };
 
-            if (status == 500) _logger.LogError(ex, "Unhandled exception");
-            else _logger.LogWarning("{Message}", ex.Message);
+            if (status == 500)
+                _logger.LogError(ex, "Unhandled exception. User: {UserId} ({Email}), Request: {Method} {Path}",
+                    userId, email, method, path);
+            else
+                _logger.LogWarning("{Message}. User: {UserId} ({Email}), Request: {Method} {Path}",
+                    ex.Message, userId, email, method, path);
 
             context.Response.StatusCode = status;
             context.Response.ContentType = "application/json";

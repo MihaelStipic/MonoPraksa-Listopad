@@ -7,8 +7,9 @@ using MonoPraksa.Repository;
 using MonoPraksa.Repository.Common;
 using MonoPraksa.Service;
 using MonoPraksa.Service.Common;
+using Serilog;
 using System.Text;
-
+using Serilog;
 namespace MonoPraksa;
 
 public class Program
@@ -16,6 +17,15 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+
+        builder.Host.UseSerilog((context, config) => config
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    "logs/log-.txt",
+        rollingInterval: RollingInterval.Day,
+        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error));
 
         var jwtKey = builder.Configuration["Jwt:Key"]
             ?? throw new InvalidOperationException("Jwt:Key is not configured.");
