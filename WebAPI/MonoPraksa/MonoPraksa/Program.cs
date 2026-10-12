@@ -16,10 +16,21 @@ namespace MonoPraksa
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var jwtKey = builder.Configuration["Jwt:Key"]
+                ?? throw new InvalidOperationException("Jwt:Key is not configured.");
+            
+            var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+                ?? throw new InvalidOperationException("Jwt:Issuer is not configured.");
+            var jwtAudience = builder.Configuration["Jwt:Audience"]
+                ?? throw new InvalidOperationException("Jwt:Audience is not configured.");
+
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
+
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
             builder.Services.AddScoped<IFootballerService, FootballerService>();
@@ -35,10 +46,13 @@ namespace MonoPraksa
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                        //Je li token izdao MonoPraksa? (Issuer)
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtIssuer,
+                        //Je li namijenjen MonoPraksaUsers? (Audience)
+                        ValidateAudience = true,
+                        ValidAudience = jwtAudience,
                         ValidateLifetime = true
                     };
                 });
