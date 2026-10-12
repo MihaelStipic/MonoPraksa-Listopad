@@ -92,16 +92,13 @@ public class FootballerRepository : IFootballerRepository
     }
     public async Task RemoveAsync(FootballerDto player)
     {
-        var playerw = new Footballer
+        var entity = await _db.Footballers.FindAsync(player.Id);
+
+        if (entity != null)
         {
-            Id = player.Id,
-            PlayerName = player.PlayerName,
-            ClubId = player.ClubId,
-            DateOfBirth = player.DateOfBirth,
-            Rating = player.Rating
-        };
-        _db.Footballers.Remove(playerw);
-        await _db.SaveChangesAsync();
+            _db.Footballers.Remove(entity);
+            await _db.SaveChangesAsync();
+        }
     }
 
 }
