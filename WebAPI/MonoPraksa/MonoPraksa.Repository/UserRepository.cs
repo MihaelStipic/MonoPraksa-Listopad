@@ -12,7 +12,16 @@ namespace MonoPraksa.Repository
         {
             _db = db;
         }
+        public async Task<IEnumerable<UserDto>> GetUsersAsync()
+        {
+            return await _db.Users.Select(f => new UserDto
+            {
+                Id = f.Id,
+                Email = f.Email,
+                Role = f.Role
 
+            }).ToListAsync();
+        }
         public async Task<User?> GetByEmailAsync(string email)
         {
             return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
