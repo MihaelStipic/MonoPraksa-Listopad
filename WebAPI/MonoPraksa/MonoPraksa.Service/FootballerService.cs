@@ -14,10 +14,7 @@ public class FootballerService : IFootballerService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<FootballerDto>> GetAllAsync()
-    {
-        return await _repository.GetAllAsync();
-    }
+    
 
     
 

@@ -1,12 +1,13 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MonoPraksa.Middleware;
 using MonoPraksa.Model;
 using MonoPraksa.Repository;
 using MonoPraksa.Repository.Common;
 using MonoPraksa.Service;
 using MonoPraksa.Service.Common;
+using System.Text;
 
 namespace MonoPraksa;
 
@@ -60,6 +61,8 @@ public class Program
         builder.Services.AddAuthorization();
 
         var app = builder.Build();
+        //// Global exception handling
+        app.UseMiddleware<ExceptionMiddleware>();
 
         if (app.Environment.IsDevelopment())
         {

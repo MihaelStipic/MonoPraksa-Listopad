@@ -5,7 +5,6 @@ namespace MonoPraksa.Repository.Common;
 
 public interface IFootballerRepository
 {
-    Task<IEnumerable<FootballerDto>> GetAllAsync();
     Task<FootballerDto?> GetByIdAsync(Guid id);
     Task<IEnumerable<FootballerDto>> GetFilteredAsync(int? minRating, string? name, int? playerAge);
     

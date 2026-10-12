@@ -14,19 +14,7 @@ public class FootballerRepository : IFootballerRepository
     }
 
 
-    public async Task<IEnumerable<FootballerDto>> GetAllAsync()
-    {
-        return await _db.Footballers.Select(f => new FootballerDto
-        {
-            Id = f.Id,
-            ClubId = f.ClubId,
-            PlayerName = f.PlayerName,
-            DateOfBirth = f.DateOfBirth,
-            Rating = f.Rating,
-            ClubName = f.Club!.Name
-
-        }).ToListAsync();
-    }
+    
 
     
 
